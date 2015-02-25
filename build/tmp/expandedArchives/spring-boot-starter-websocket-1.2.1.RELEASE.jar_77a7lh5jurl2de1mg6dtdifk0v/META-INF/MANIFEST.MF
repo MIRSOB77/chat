@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Implementation-Vendor: Pivotal Software, Inc.
+Implementation-Title: Spring Boot WebSocket Starter
+Implementation-Version: 1.2.1.RELEASE
+Implementation-Vendor-Id: org.springframework.boot
+Built-By: bamboo
+Build-Jdk: 1.7.0_67
+Specification-Vendor: Pivotal Software, Inc.
+Specification-Title: Spring Boot WebSocket Starter
+Created-By: Apache Maven 3.0.5
+Specification-Version: 1.2.1.RELEASE
+Archiver-Version: Plexus Archiver
+

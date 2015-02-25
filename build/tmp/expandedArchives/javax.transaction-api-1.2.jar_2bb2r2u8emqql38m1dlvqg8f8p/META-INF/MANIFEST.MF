@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Export-Package: javax.transaction;uses:="javax.enterprise.context,java
+ x.enterprise.util,javax.transaction.xa,javax.interceptor";version="1.
+ 2",javax.transaction.xa;version="1.2"
+Implementation-Version: 1.2
+Built-By: romano
+Specification-Vendor: Oracle Corporation
+Tool: Bnd-0.0.255
+Bundle-Name: javax.transaction API
+Created-By: 1.7.0_09 (Oracle Corporation)
+Require-Bundle: system.bundle
+Implementation-Vendor: GlassFish Community
+Bundle-Vendor: GlassFish Community
+Implementation-Vendor-Id: org.glassfish
+Bundle-Version: 1.2
+Build-Jdk: 1.7.0_09
+Bnd-LastModified: 1368450694071
+Bundle-ManifestVersion: 2
+Bundle-License: https://glassfish.dev.java.net/nonav/public/CDDL+GPL.h
+ tml
+Bundle-Description: Java(TM) JTA 1.2 API Design Specification
+Specification-Version: 1.2
+Import-Package: javax.enterprise.context,javax.enterprise.util,javax.i
+ nterceptor;version="[1.2,1.2.98)",javax.transaction;version="1.2",jav
+ ax.transaction.xa;version="1.2"
+Bundle-SymbolicName: javax.transaction-api
+Bundle-DocURL: https://glassfish.java.net
+Extension-Name: javax.transaction
+Archiver-Version: Plexus Archiver
+

@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Implementation-Title: thymeleaf-spring4
+Implementation-Version: 2.1.4.RELEASE
+Archiver-Version: Plexus Archiver
+Built-By: releases
+Specification-Vendor: The THYMELEAF team
+Specification-Title: thymeleaf-spring4
+Implementation-Vendor-Id: org.thymeleaf
+Implementation-Vendor: The THYMELEAF team
+X-Compile-Target-JDK: 1.5
+X-Compile-Source-JDK: 1.5
+Created-By: Apache Maven 3.2.1
+Build-Jdk: 1.8.0_25
+Specification-Version: 2.1.4.RELEASE
+

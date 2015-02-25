@@ -1,0 +1,96 @@
+buildscript {
+    ext {
+        springBootVersion = '1.2.1.RELEASE'
+    }
+    repositories {
+        jcenter()
+        maven { url "http://repo.spring.io/libs-snapshot" }
+        maven { url "http://repo.spring.io/milestone" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'jetty'
+
+
+
+jar {
+    baseName = 'spring-boot-chat'
+    version = '0.0.1-SNAPSHOT'
+
+    manifest {
+        attributes("Manifest-Version"       : "1.0",
+                "Spring-Boot-Version"    : "1.2.1.RELEASE",
+                "Main-Class"             : "chat.ChatApplication",
+                "Starter-Class"          : "org.springframework.boot.loader.JarLauncher"
+        )
+    }
+//    doFirst {
+//            from { configurations.runtime.collect { it.isDirectory() ? it : (it) } }
+//    }
+}
+
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "http://repo.spring.io/libs-snapshot" }
+    maven { url "http://repo.spring.io/milestone" }
+}
+
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-websocket")
+    compile("org.springframework.boot:spring-boot-starter-freemarker")
+    compile("org.springframework.boot:spring-boot-starter-velocity")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("org.springframework:spring-orm:4.1.5.BUILD-SNAPSHOT")
+    compile("org.springframework.boot:spring-boot-starter-websocket")
+    compile("org.springframework:spring-messaging")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+
+    runtime ([
+
+            // Hibernate - runtime, needs cglib v2.2.2 with Guice
+            'org.hibernate:hibernate-entitymanager:3.4.0.GA',
+            'cglib:cglib:2.2.2',
+
+            // BeanShell - used by Workflow Descriptions for step/action scripts
+            "bsh:bsh:1.3.0",
+
+            // Logging Runtime
+            // "org.slf4j:slf4j-log4j12:1.6.1",
+            //  "log4j:log4j:1.2.16",
+
+            // C3P0 - Connection Pooling
+            "c3p0:c3p0:0.9.1",
+
+            // Various database drivers; Add or remove accordingly
+            "mysql:mysql-connector-java:5.1.25",
+            'com.h2database:h2:1.3.170'
+
+    ])
+}
+
+eclipse {
+    classpath {
+         containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+         containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.1'
+}
