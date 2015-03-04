@@ -2,30 +2,20 @@ package chat.service;
 
 import chat.repository.MessageRepository;
 import chat.service.exception.ChatException;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.JsonSerializer;
+import chat.utils.JsonResponseMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.fasterxml.jackson.databind.util.JSONWrappedObject;
-import org.apache.commons.beanutils.BeanUtils;
 import chat.repository.PersonCrudRepository;
 import chat.repository.PersonRepository;
 import chat.repository.entity.ChatMessage;
-import chat.repository.entity.Person;
+import chat.repository.entity.User;
 import chat.service.exception.UserManagementException;
-import chat.utils.RawMessage;
-import org.apache.commons.collections.ListUtils;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.ObjectUtils;
+import chat.client.RawMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Mirsad on 22.02.2015.
@@ -42,30 +32,24 @@ public class MessageService{
     MessageRepository messageRepository;
 
 
-    public void send(String receiver, ChatMessage message) throws ChatException {
-        Person receiverObj = personSearchRepository.findByNickname(receiver);
-        if(receiverObj == null){
-            throw new ChatException();
+    public Long send(ChatMessage message) throws ChatException {
+        ChatMessage newMsg = null;
+        newMsg = messageRepository.save(message);
+
+        if(!message.getReceiver().getOnline()){
+            newMsg.setNewMsg(Boolean.TRUE);
         }
+        messageRepository.save(newMsg);
 
-        message.setReceiver(receiverObj);
-
-        messageRepository.save(message);
-
-        if(message.getReceiver().getOnline()){
-
-        } else {
-
-        }
+        return newMsg.getId();
     }
 
-
-    public List<Map<String,String>> getAll() throws ChatException {
-        List<Map<String,String>> jsonMessages = new ArrayList<Map<String,String>>();
+    public List<JsonResponseMap> getAll() throws ChatException {
+        List<JsonResponseMap> jsonMessages = new ArrayList<JsonResponseMap>();
         Iterable<ChatMessage> allMessages = messageRepository.findAll();
         ObjectMapper objectMapper = new ObjectMapper();
         for(ChatMessage p : allMessages){
-            jsonMessages.add(objectMapper.convertValue(p, Map.class));
+            jsonMessages.add(objectMapper.convertValue(p, JsonResponseMap.class));
         }
         return jsonMessages;
     }
@@ -74,7 +58,7 @@ public class MessageService{
     public ChatMessage transformMessage(RawMessage message) throws UserManagementException, InvocationTargetException, IllegalAccessException {
         ChatMessage chatMessage = new ChatMessage();
 
-        Person sender = personSearchRepository.findByNickname(message.getSender());
+        User sender = personSearchRepository.findByNickname(message.getSender());
 
         if(sender==null){
             throw new UserManagementException("user with nickname doesn't exist");
@@ -82,11 +66,17 @@ public class MessageService{
 
         chatMessage.setSender(sender);
 
+
+        User receiver = personSearchRepository.findByNickname(message.getReceiver());
+
+        if(receiver==null){
+            throw new UserManagementException("user with nickname doesn't exist");
+        }
+
+        chatMessage.setSender(sender);
+        chatMessage.setReceiver(receiver);
+
         chatMessage.setText(message.getText());
-
-
-
         return chatMessage;
-
     }
 }

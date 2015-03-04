@@ -10,33 +10,45 @@ import javax.persistence.*;
 public class ChatMessage {
 
 
+    public Long getId() {
+        return id;
+    }
+
     @Id
     @GeneratedValue
     Long id;
 
     @ManyToOne
-    Person sender;
+    User sender;
 
     @ManyToOne
-    Person receiver;
+    User receiver;
 
     String text;
 
-    Boolean read;
+    public Boolean isNewMsg() {
+        return newMsg;
+    }
 
-    public Person getSender() {
+    public void setNewMsg(Boolean isNew) {
+        this.newMsg = isNew;
+    }
+
+    Boolean newMsg = Boolean.FALSE;
+
+    public User getSender() {
         return sender;
     }
 
-    public void setSender(Person sender) {
+    public void setSender(User sender) {
         this.sender = sender;
     }
 
-    public Person getReceiver() {
+    public User getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(Person receiver) {
+    public void setReceiver(User receiver) {
         this.receiver = receiver;
     }
 

@@ -1,19 +1,20 @@
 package chat.rest;
 
 import chat.repository.entity.ChatMessage;
-import chat.repository.entity.Person;
 import chat.service.MessageService;
-import chat.service.UserManagementService;
 import chat.service.exception.ChatException;
 import chat.service.exception.UserManagementException;
-import chat.utils.ChatRole;
-import chat.utils.RawMessage;
+import chat.messaging.ChatClientNotification;
+import chat.messaging.ChatClientNotificationUserMessage;
+import chat.client.RawMessage;
+import chat.utils.JsonResponseMap;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -30,35 +31,27 @@ public class ChatRestController {
     @Autowired
     MessageService messageService;
 
-    @RequestMapping(value = "/message/send/{receiver}",
-                    method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> sendMessage(@PathVariable("receiver") String receiver, @RequestBody RawMessage messageJson)
-            throws IllegalAccessException, InvocationTargetException, UserManagementException, ChatException {
-
-        Logger.getRootLogger().error(messageJson);
-
-        ChatMessage chatMessage = messageService.transformMessage(messageJson);
-
-
-
-        messageService.send(receiver, chatMessage);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("MyResponseHeader", "MyValue");
-
-        return new ResponseEntity<Boolean>(Boolean.TRUE, responseHeaders, HttpStatus.CREATED);
-    }
-
     @RequestMapping(value = "/messages",
             method = RequestMethod.GET)
-    public ResponseEntity<List<Map<String,String>>> showAllMessages()
+    public ResponseEntity<List<JsonResponseMap>> showAllMessages()
             throws IllegalAccessException, InvocationTargetException, UserManagementException, ChatException {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("MyResponseHeader", "MyValue");
 
-        return new ResponseEntity<List<Map<String,String>>>(messageService.getAll(), HttpStatus.CREATED);
-
+        return new ResponseEntity<List<JsonResponseMap>>(messageService.getAll(), HttpStatus.OK);
     }
 
+
+//    @RequestMapping(value = "/send",
+//            method = RequestMethod.POST)
+//    public JsonResponseMap sendSingleMessage(@RequestBody RawMessage rawMessage)
+//            throws IllegalAccessException, InvocationTargetException, UserManagementException, ChatException {
+//
+//        HttpHeaders responseHeaders = new HttpHeaders();
+//        responseHeaders.set("MyResponseHeader", "MyValue");
+//
+//        return new ResponseEntity<List<JsonResponseMap>>(, HttpStatus.OK);
+//    }
 
 
     @ExceptionHandler(value = { UserManagementException.class})
