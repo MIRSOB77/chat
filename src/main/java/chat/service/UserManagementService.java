@@ -42,6 +42,7 @@ public class UserManagementService {
         if(user.getBirth().after(eighteenYearsBefore)) {
             throw new UserManagementException("User must be at least 18 years old");
         }
+
         user = personStoreRepository.save(user);
         return user;
     }
@@ -64,10 +65,6 @@ public class UserManagementService {
         return true;
     }
 
-//
-//    public List<Person> searchForContactsByNickname(String nickname){
-//        //personSearchRepository.
-//    }
 
     public JsonResponseMap logonUser(String username, String password) throws UserManagementException {
         Assert.hasText(username,"Username missing");

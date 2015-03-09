@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created by Mirsad on 22.02.2015.
@@ -82,6 +83,13 @@ public class User {
 
     @OneToMany(mappedBy = "receiver")
     List<ChatMessage> inBoxMessages;
+
+    @ManyToMany
+    @JoinTable(name = "friends")
+
+    Set<User> friends;
+
+
 
     public String getFirstName() {
         return firstName;

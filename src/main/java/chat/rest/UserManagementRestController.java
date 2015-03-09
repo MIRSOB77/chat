@@ -22,24 +22,28 @@ public class UserManagementRestController {
 
     @RequestMapping(value = "/person/register", method = RequestMethod.POST )
     @ResponseStatus(HttpStatus.OK)
-    public void registerUser(@RequestBody User userdata) throws UserManagementException{
+    public JsonResponseMap registerUser(@RequestBody User userdata) throws UserManagementException{
+        JsonResponseMap jsonResponse = new JsonResponseMap();
+        jsonResponse.put("success", Boolean.TRUE);
         userManagementService.registerUser(userdata);
+
+        return jsonResponse;
     }
 
     @RequestMapping("/person/{nickname}")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> nicknameExists(@PathVariable("nickname") String nickname) throws UserManagementException {
         Map<String,Object> response = new HashMap();
-        response.put("exists", Boolean.FALSE);
+        response.put("success", Boolean.FALSE);
         if(userManagementService.checkNicknameIsFree(nickname)){
-            response.put("exists", Boolean.TRUE);
+            response.put("success", Boolean.TRUE);
         }
         return response;
     }
 
-    @RequestMapping("/person/login")
+    @RequestMapping("/person/register")
     @ResponseStatus(HttpStatus.OK)
-    public JsonResponseMap userLogin(@RequestBody UserLogin userLogin) throws UserManagementException{
+    public JsonResponseMap registerUser(@RequestBody UserLogin userLogin) throws UserManagementException{
         JsonResponseMap logonResponse = userManagementService.logonUser(userLogin.getNickname(), userLogin.getPassword());
 
         userManagementService.dispatchUserStatusChangeEvent(userLogin.getNickname(), Boolean.TRUE);
@@ -47,11 +51,16 @@ public class UserManagementRestController {
         return logonResponse;
     }
 
-//    @RequestMapping("/person/search/{nickname}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void nicknameExists(@PathVariable("nickname") String nickname) throws UserManagementException {
-//        userManagementService.checkNicknameIsFree(nickname);
-//    }
+
+    @RequestMapping("/person/login")
+    @ResponseStatus(HttpStatus.OK)
+    public JsonResponseMap loginUser(@RequestBody UserLogin userLogin) throws UserManagementException{
+        JsonResponseMap logonResponse = userManagementService.logonUser(userLogin.getNickname(), userLogin.getPassword());
+
+        userManagementService.dispatchUserStatusChangeEvent(userLogin.getNickname(), Boolean.TRUE);
+
+        return logonResponse;
+    }
 
     @ExceptionHandler(value = { UserManagementException.class })
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
